@@ -1,0 +1,8 @@
+                                 Advent of Code
+
+
+This directory tree includes solutions to Advent of Code [1] in Scala. Launch
+`sbt` and use `run DayXX`, replacing `XX` with the two digit number for the
+desired day.
+
+[1]: http://adventofcode.com/
