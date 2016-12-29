@@ -6,7 +6,7 @@ class Day05 extends DailyChallenge[String, String] {
   val md5Instance = MessageDigest.getInstance("MD5")
 
   def md5(s: String): String = {
-    md5Instance.digest(s.getBytes).map("%02X".format(_)).mkString
+    md5Instance.digest(s.getBytes).map("%02X".format(_)).mkString.toLowerCase
   }
 
   def hashes(doorId: String) = Stream.from(0).map(i => md5(doorId + i)).filter(_.startsWith("00000"))
