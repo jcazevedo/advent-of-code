@@ -1,6 +1,6 @@
 import scalariform.formatter.preferences._
 
-name := "adventofcode"
+name := "adventofcode-2016"
 
 organization := "net.jcazevedo"
 
