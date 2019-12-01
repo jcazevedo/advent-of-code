@@ -32,6 +32,7 @@ int main() {
   vector<long long> masses;
   while (fin >> v)
     masses.push_back(v);
+  fin.close();
   cout << "Part 1: " << getFuelPart1(masses) << endl;
   cout << "Part 2: " << getFuelPart2(masses) << endl;
   return 0;
