@@ -27,16 +27,18 @@ vector<vector<Instruction> > readInput() {
   return res;
 }
 
-int closestIntersection(const vector<vector<Instruction> >& wires) {
+pair<int, int> closestIntersection(const vector<vector<Instruction> >& wires) {
   map<pair<int, int>, int> visited;
+  map<pair<int, int>, int> dist;
   map<char, pair<int, int> > directions =
       {{'U', make_pair(0, 1)}, {'D', make_pair(0, -1)}, {'L', make_pair(-1, 0)}, {'R', make_pair(1, 0)}};
   int nWires = wires.size();
-  int best = numeric_limits<int>::max();
+  int bestDist = numeric_limits<int>::max();
+  int bestSteps = numeric_limits<int>::max();
   visited[make_pair(0, 0)] = 1;
   for (int w = 1; w <= nWires; ++w) {
     vector<Instruction> steps = wires[w - 1];
-    int N = steps.size(), x = 0, y = 0;
+    int N = steps.size(), x = 0, y = 0, currSteps = 0;
     for (int i = 0; i < N; ++i) {
       pair<int, int> dirs = directions[steps[i].direction];
       int nSteps = steps[i].nSteps;
@@ -45,20 +47,28 @@ int closestIntersection(const vector<vector<Instruction> >& wires) {
       for (int j = 0; j < nSteps; ++j) {
         int nx = x + dx;
         int ny = y + dy;
+        currSteps++;
         pair<int, int> next = make_pair(nx, ny);
-        if (visited[next] != 0 && visited[next] != w)
-          best = min(best, abs(nx) + abs(ny));
+        if (visited[next] != w)
+          dist[next] += currSteps;
+        if (visited[next] != 0 && visited[next] != w) {
+          bestDist = min(bestDist, abs(nx) + abs(ny));
+          if (w == nWires)
+            bestSteps = min(bestSteps, dist[next]);
+        }
         visited[next] = w;
         x = nx;
         y = ny;
       }
     }
   }
-  return best;
+  return make_pair(bestDist, bestSteps);
 }
 
 int main() {
   vector<vector<Instruction> > wires = readInput();
-  cout << "Part 1: " << closestIntersection(wires) << endl;
+  pair<int, int> res = closestIntersection(wires);
+  cout << "Part 1: " << res.first << endl;
+  cout << "Part 2: " << res.second << endl;
   return 0;
 }
