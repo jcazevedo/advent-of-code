@@ -33,7 +33,7 @@ int getValue(const map<int, int>& program, int parameter, int mode) {
 }
 
 bool validInstruction(int instruction) {
-  static vector<int> validCodes = {1, 2, 3, 4, 99};
+  static vector<int> validCodes = {1, 2, 3, 4, 5, 6, 7, 8, 99};
   for (int code : validCodes)
     if (code == instruction)
       return true;
@@ -41,7 +41,7 @@ bool validInstruction(int instruction) {
 }
 
 vector<int> run(map<int, int> program, const vector<int>& input) {
-  vector<int> output, modes;
+  vector<int> output, modes, params;
   bool running = true;
   int intP = 0, inputP = 0, p1, p2, p3;
   while (running) {
@@ -80,6 +80,44 @@ vector<int> run(map<int, int> program, const vector<int>& input) {
         intP += 2;
         break;
 
+      case 5:
+        modes = getModes(program[intP], 2);
+        p1 = getValue(program, program[intP + 1], modes[0]);
+        p2 = getValue(program, program[intP + 2], modes[1]);
+        if (p1 != 0)
+          intP = p2;
+        else
+          intP += 3;
+        break;
+
+      case 6:
+        modes = getModes(program[intP], 2);
+        p1 = getValue(program, program[intP + 1], modes[0]);
+        p2 = getValue(program, program[intP + 2], modes[1]);
+        if (p1 == 0)
+          intP = p2;
+        else
+          intP += 3;
+        break;
+
+      case 7:
+        modes = getModes(program[intP], 2);
+        p1 = getValue(program, program[intP + 1], modes[0]);
+        p2 = getValue(program, program[intP + 2], modes[1]);
+        p3 = program[intP + 3];
+        program[p3] = p1 < p2;
+        intP += 4;
+        break;
+
+      case 8:
+        modes = getModes(program[intP], 2);
+        p1 = getValue(program, program[intP + 1], modes[0]);
+        p2 = getValue(program, program[intP + 2], modes[1]);
+        p3 = program[intP + 3];
+        program[p3] = p1 == p2;
+        intP += 4;
+        break;
+
       case 99:
         running = false;
         break;
@@ -90,8 +128,10 @@ vector<int> run(map<int, int> program, const vector<int>& input) {
 
 int main() {
   map<int, int> program = readInput("day05.in");
-  vector<int> input = {1};
-  vector<int> output = run(program, input);
-  cout << "Part 1: " << output.back() << endl;
+  vector<int> input1 = {1}, input2 = {5};
+  vector<int> output1 = run(program, input1);
+  cout << "Part 1: " << (output1.size() ? output1.back() : -1) << endl;
+  vector<int> output2 = run(program, input2);
+  cout << "Part 2: " << (output2.size() ? output2.back() : -1) << endl;
   return 0;
 }
