@@ -59,8 +59,24 @@ int part1(const vector<vector<vector<int> > > layers) {
   return n1 * n2;
 }
 
+void showImage(const vector<vector<vector<int> > > layers) {
+  int L = layers.size();
+  for (int i = 0; i < H; ++i) {
+    for (int j = 0; j < W; ++j) {
+      int k = 0;
+      while (k < L && layers[k][i][j] == 2)
+        k++;
+      assert(k < L);
+      cout << (layers[k][i][j] == 0 ? ' ' : '*');
+    }
+    cout << endl;
+  }
+}
+
 int main() {
   vector<vector<vector<int> > > layers = readInput();
   cout << "Part 1: " << part1(layers) << endl;
+  cout << "Part 2:" << endl;
+  showImage(layers);
   return 0;
 }
