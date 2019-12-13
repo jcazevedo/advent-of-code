@@ -152,16 +152,24 @@ vector<long long> runContinuously(map<long long, long long> program, queue<long 
   return output;
 }
 
-int countBlockTiles(const vector<long long>& output) {
-  map<pair<long long, long long>, int> tiles;
+void fill(const vector<long long>& output, map<pair<long long, long long>, int>& tiles, int& score) {
   int N = output.size();
   assert(N % 3 == 0);
   for (int i = 0; i < N; i += 3) {
     long long x = output[i];
     long long y = output[i + 1];
     int tileId = output[i + 2];
-    tiles[{x, y}] = tileId;
+    if (x == -1 && y == 0)
+      score = tileId;
+    else
+      tiles[{x, y}] = tileId;
   }
+}
+
+int countBlockTiles(const vector<long long>& output) {
+  map<pair<long long, long long>, int> tiles;
+  int score = 0;
+  fill(output, tiles, score);
   int cnt = 0;
   for (auto itr = tiles.begin(); itr != tiles.end(); ++itr) {
     if (itr->second == 2)
@@ -170,10 +178,58 @@ int countBlockTiles(const vector<long long>& output) {
   return cnt;
 }
 
+int sgn(int d) {
+  if (d < 0)
+    return -1;
+  if (d > 0)
+    return 1;
+  return 0;
+}
+
+int getScore(map<long long, long long> program) {
+  program[0] = 2;
+  long long intP = 0, relBase = 0;
+  queue<long long> input;
+  map<pair<long long, long long>, int> tiles;
+  int score = 0;
+  bool ball = false, paddle = false;
+  int bx, px, cnt = 0;
+  while (true) {
+    long long x = get<1>(run(program, input, intP, relBase));
+    long long y = get<1>(run(program, input, intP, relBase));
+    long long id = get<1>(run(program, input, intP, relBase));
+    if (x == -1 && y == -1 && id == -1)
+      break;
+    if (x == -1 && y == 0) {
+      score = id;
+    } else {
+      if (id == 2 && tiles[{x, y}] != 2)
+        cnt++;
+      if (id != 2 && tiles[{x, y}] == 2)
+        cnt--;
+      tiles[{x, y}] = id;
+    }
+    if (id == 4) {
+      bx = x;
+      ball = true;
+    }
+    if (id == 3) {
+      px = x;
+      paddle = true;
+    }
+    if (ball && paddle) {
+      input.push(sgn(bx - px));
+      ball = false;
+    }
+  }
+  return score;
+}
+
 int main() {
   map<long long, long long> program = readInput("day13.in");
   queue<long long> input;
   vector<long long> output = runContinuously(program, input);
   cout << "Part 1: " << countBlockTiles(output) << endl;
+  cout << "Part 2: " << getScore(program) << endl;
   return 0;
 }
