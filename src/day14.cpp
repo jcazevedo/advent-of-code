@@ -39,7 +39,6 @@ map<string, Reaction> readInput() {
 ll getMinAux(ll quantity, string target, string from, const map<string, Reaction>& reactions, map<string, ll>& extra) {
   Reaction r = reactions.at(target);
   ll targetQ = quantity - extra[target];
-  extra[target] = 0;
   ll mult = (targetQ + (r.quantity - 1)) / r.quantity;
   extra[target] = (mult * r.quantity) - targetQ;
   ll cnt = 0;
