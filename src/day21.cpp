@@ -166,11 +166,6 @@ queue<ll> springCodeProgramToInput(const vector<string>& program) {
   return res;
 }
 
-void printOutput(const vector<ll>& output) {
-  for (ll ch : output)
-    cout << (char)(ch);
-}
-
 ll getHullDamage(const vector<ll>& output) {
   for (ll ch : output) {
     if (ch >= 256)
