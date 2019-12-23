@@ -49,7 +49,7 @@ bool validInstruction(int instruction) {
   return false;
 }
 
-tuple<bool, ll> tick(map<ll, ll>& program, queue<ll>& input, ll& intP, ll& relBase) {
+tuple<bool, ll> tick(map<ll, ll>& program, queue<ll>& input, ll& intP, ll& relBase, int& inputCount) {
   vector<int> modes;
   bool running = true;
   ll p1, p2, p3;
@@ -79,6 +79,7 @@ tuple<bool, ll> tick(map<ll, ll>& program, queue<ll>& input, ll& intP, ll& relBa
       p1 = getValue(program, program[intP + 1], modes[0], relBase, true);
       if (input.empty()) {
         program[p1] = -1;
+        inputCount = inputCount + 1;
       } else {
         program[p1] = input.front();
         input.pop();
@@ -89,6 +90,7 @@ tuple<bool, ll> tick(map<ll, ll>& program, queue<ll>& input, ll& intP, ll& relBa
     case 4:
       modes = getModes(program[intP], 1);
       p1 = getValue(program, program[intP + 1], modes[0], relBase);
+      inputCount = 0;
       intP += 2;
       return {running, p1};
 
@@ -144,13 +146,26 @@ tuple<bool, ll> tick(map<ll, ll>& program, queue<ll>& input, ll& intP, ll& relBa
   return {running, -1};
 }
 
-ll runAll(map<ll, ll> program, int computers) {
+bool isIdle(const vector<queue<ll>>& inputs, const vector<int>& inputCounts) {
+  for (queue<ll> in : inputs) {
+    if (!in.empty())
+      return false;
+  }
+  for (int in : inputCounts) {
+    if (in < 4)
+      return false;
+  }
+  return true;
+}
+
+tuple<ll, ll> runAll(map<ll, ll> program, int computers) {
   vector<map<ll, ll>> programs;
   vector<queue<ll>> inputs;
   vector<ll> intPs;
   vector<ll> relBases;
   vector<vector<ll>> outputs;
   vector<bool> done;
+  vector<int> inputCount;
   for (int i = 0; i < computers; ++i) {
     programs.push_back(program);
     queue<ll> input;
@@ -160,34 +175,54 @@ ll runAll(map<ll, ll> program, int computers) {
     relBases.push_back(0);
     outputs.push_back(vector<ll>());
     done.push_back(false);
+    inputCount.push_back(0);
   }
-  int doneCnt = 0;
-  int idx = 0;
-  while (doneCnt < computers) {
+  bool natReady = false;
+  ll res1 = -1, res2 = -1, x = -1, y = -1;
+  int doneCnt = 0, idx = 0;
+  vector<ll> sent;
+  while (doneCnt < computers && (res1 == -1 || res2 == -1)) {
+    if (isIdle(inputs, inputCount) && natReady) {
+      inputs[0].push(x);
+      inputs[0].push(y);
+      if (res2 == -1 && sent.size() > 0 && y == sent.back())
+        res2 = y;
+      sent.push_back(y);
+      inputCount[0] = 0;
+    }
     if (!done[idx]) {
-      tuple<bool, ll> res = tick(programs[idx], inputs[idx], intPs[idx], relBases[idx]);
+      tuple<bool, ll> res = tick(programs[idx], inputs[idx], intPs[idx], relBases[idx], inputCount[idx]);
       ll output = get<1>(res);
-      done[idx] = !get<0>(res);
+      bool finished = !get<0>(res);
+      done[idx] = finished;
       if (done[idx])
         doneCnt++;
       if (output != -1)
         outputs[idx].push_back(output);
       if (outputs[idx].size() == 3) {
         ll target = outputs[idx][0];
-        if (target == 255)
-          return outputs[idx][2];
-        inputs[target].push(outputs[idx][1]);
-        inputs[target].push(outputs[idx][2]);
+        if (target == 255) {
+          natReady = true;
+          x = outputs[idx][1];
+          y = outputs[idx][2];
+          if (res1 == -1)
+            res1 = y;
+        } else {
+          inputs[target].push(outputs[idx][1]);
+          inputs[target].push(outputs[idx][2]);
+        }
         outputs[idx].clear();
       }
     }
     idx = (idx + 1) % computers;
   }
-  return -1;
+  return {res1, res2};
 }
 
 int main() {
   map<ll, ll> program = readInput("day23.in");
-  cout << "Part 1: " << runAll(program, 50) << endl;
+  tuple<ll, ll> res = runAll(program, 50);
+  cout << "Part 1: " << get<0>(res) << endl;
+  cout << "Part 2: " << get<1>(res) << endl;
   return 0;
 }
