@@ -1,6 +1,7 @@
 # Advent of Code 2020
 
-This repository contains my solutions to [Advent of Code 2020][advent-of-code-2020] in Scala. You can run them using [sbt][sbt] by typing the following, replacing `XX` with the day of the desired problem:
+This repository contains my solutions to [Advent of Code 2020][advent-of-code-2020] in Scala. You can run them using
+[sbt][sbt] by typing the following, replacing `XX` with the day of the desired problem:
 
 ```
 $ sbt "run DayXX"
