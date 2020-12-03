@@ -12,7 +12,7 @@ object DailyChallengeRunner extends App {
     getClass.getClassLoader.loadClass("adventofcode." + cls).newInstance().asInstanceOf[DailyChallenge[_, _]]
   val inputFile = s"input/${args(0).drop(3)}.input"
   val source = Source.fromFile(inputFile)
-  val input = source.getLines().mkString("\n")
+  val input = source.mkString
   source.close()
   println(s"Running challenge for $cls...")
   val res = challenge.run(input)
