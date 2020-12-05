@@ -5,17 +5,7 @@ import scala.util.Try
 class Day04 extends DailyChallenge[Int, Int] {
   case class Passport(fields: Map[String, String])
 
-  val requiredFields: Set[String] = Set(
-    "byr",
-    "iyr",
-    "eyr",
-    "hgt",
-    "hcl",
-    "ecl",
-    "pid"
-  )
-
-  val validations: Map[String, String => Boolean] = Map(
+  val fields: Map[String, String => Boolean] = Map(
     "byr" -> { s => Try(s.toInt).fold(_ => false, v => v >= 1920 && v <= 2002) },
     "iyr" -> { s => Try(s.toInt).fold(_ => false, v => v >= 2010 && v <= 2020) },
     "eyr" -> { s => Try(s.toInt).fold(_ => false, v => v >= 2020 && v <= 2030) },
@@ -43,10 +33,10 @@ class Day04 extends DailyChallenge[Int, Int] {
   }
 
   def isValid1(passport: Passport): Boolean =
-    (requiredFields -- passport.fields.keySet).isEmpty
+    (fields.keySet -- passport.fields.keySet).isEmpty
 
   def isValid2(passport: Passport): Boolean =
-    isValid1(passport) && passport.fields.forall { case (k, v) => validations.get(k).forall(_(v)) }
+    isValid1(passport) && passport.fields.forall { case (k, v) => fields.get(k).forall(_(v)) }
 
   def run(input: String): (Int, Int) = {
     val passports = input

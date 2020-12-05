@@ -8,10 +8,8 @@ class Day02 extends DailyChallenge[Int, Int] {
     chCnt >= policy.lo && chCnt <= policy.hi
   }
 
-  def isValidPart2(policy: PasswordPolicy, password: String): Boolean = {
-    val chSet = Set(password(policy.lo - 1), password(policy.hi - 1))
-    chSet.size == 2 && chSet(policy.ch)
-  }
+  def isValidPart2(policy: PasswordPolicy, password: String): Boolean =
+    password(policy.lo - 1) == policy.ch ^ password(policy.hi - 1) == policy.ch
 
   def part1(restrictions: List[(PasswordPolicy, String)]): Int =
     restrictions.count((isValidPart1 _).tupled)
