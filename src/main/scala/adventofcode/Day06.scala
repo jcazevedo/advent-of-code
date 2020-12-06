@@ -2,7 +2,7 @@ package adventofcode
 
 class Day06 extends DailyChallenge[Int, Int] {
   def part1(answers: List[List[String]]): Int =
-    answers.map(_.flatMap(_.toSet).toSet.size).sum
+    answers.map(_.map(_.toSet).reduce(_ | _).size).sum
 
   def part2(answers: List[List[String]]): Int =
     answers.map(_.map(_.toSet).reduce(_ & _).size).sum
