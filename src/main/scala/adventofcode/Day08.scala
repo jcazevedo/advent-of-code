@@ -9,29 +9,42 @@ class Day08 extends DailyChallenge[Int, Int] {
   case class Result(inLoop: Boolean, accumulator: Int)
 
   def run(instructions: Vector[Instruction]): Result = {
-    def run(pc: Int, acc: Int = 0, visited: Set[Int] = Set.empty): Result = {
+    def aux(pc: Int, acc: Int = 0, visited: Set[Int] = Set.empty): Result = {
       if (pc >= instructions.length) Result(inLoop = false, acc)
       else if (visited(pc)) Result(inLoop = true, acc)
-      else
+      else {
+        assert(pc >= 0 && pc < instructions.length)
         instructions(pc) match {
-          case Acc(arg) => run(pc + 1, acc + arg, visited + pc)
-          case Jmp(arg) => run(pc + arg, acc, visited + pc)
-          case Nop(_)   => run(pc + 1, acc, visited + pc)
+          case Acc(arg) => aux(pc + 1, acc + arg, visited + pc)
+          case Jmp(arg) => aux(pc + arg, acc, visited + pc)
+          case Nop(_)   => aux(pc + 1, acc, visited + pc)
         }
+      }
     }
-    run(0)
+
+    aux(0)
   }
 
   def part1(instructions: Vector[Instruction]): Int =
     run(instructions).accumulator
 
-  def part2(instructions: Vector[Instruction]): Int =
-    instructions.zipWithIndex.collectFirst {
-      case (Jmp(arg), idx) if !run(instructions.updated(idx, Nop(arg))).inLoop =>
-        run(instructions.updated(idx, Nop(arg))).accumulator
-      case (Nop(arg), idx) if !run(instructions.updated(idx, Jmp(arg))).inLoop =>
-        run(instructions.updated(idx, Jmp(arg))).accumulator
-    }.get
+  def part2(instructions: Vector[Instruction]): Int = {
+    val ans = instructions.zipWithIndex.foldLeft[Option[Int]](None) {
+      case (Some(v), _) =>
+        Some(v)
+      case (None, (Jmp(arg), idx)) =>
+        val res = run(instructions.updated(idx, Nop(arg)))
+        Some(res.accumulator).filter(_ => !res.inLoop)
+      case (None, (Nop(arg), idx)) =>
+        val res = run(instructions.updated(idx, Jmp(arg)))
+        Some(res.accumulator).filter(_ => !res.inLoop)
+      case (None, _) =>
+        None
+    }
+
+    assert(ans.nonEmpty)
+    ans.get
+  }
 
   def run(input: String): (Int, Int) = {
     val instructions = input
