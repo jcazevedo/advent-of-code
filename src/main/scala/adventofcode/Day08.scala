@@ -10,17 +10,14 @@ class Day08 extends DailyChallenge[Int, Int] {
 
   def run(instructions: Vector[Instruction]): Result = {
     def run(pc: Int, acc: Int = 0, visited: Set[Int] = Set.empty): Result = {
-      if (pc >= instructions.length)
-        Result(inLoop = false, acc)
-      else if (visited(pc))
-        Result(inLoop = true, acc)
-      else {
+      if (pc >= instructions.length) Result(inLoop = false, acc)
+      else if (visited(pc)) Result(inLoop = true, acc)
+      else
         instructions(pc) match {
           case Acc(arg) => run(pc + 1, acc + arg, visited + pc)
           case Jmp(arg) => run(pc + arg, acc, visited + pc)
           case Nop(_)   => run(pc + 1, acc, visited + pc)
         }
-      }
     }
     run(0)
   }
