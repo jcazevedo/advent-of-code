@@ -26,11 +26,11 @@ class Day11 extends DailyChallenge[Int, Int] {
     def simulate(grid: Vector[String]): Vector[String] = {
       grid.zipWithIndex.map { case (row, i) =>
         row.zipWithIndex.map { case (ch, j) =>
-          val adjacent = dirs.map { case (di, dj) => charAt(grid, i + di, j + dj) }
+          val occupiedCnt = dirs.count { case (di, dj) => charAt(grid, i + di, j + dj) == '#' }
           ch match {
-            case 'L' if adjacent.count(_ == '#') == 0 => '#'
-            case '#' if adjacent.count(_ == '#') >= 4 => 'L'
-            case _                                    => ch
+            case 'L' if occupiedCnt == 0 => '#'
+            case '#' if occupiedCnt >= 4 => 'L'
+            case _                       => ch
           }
         }.mkString
       }
@@ -43,11 +43,11 @@ class Day11 extends DailyChallenge[Int, Int] {
     def simulate(grid: Vector[String]): Vector[String] = {
       grid.zipWithIndex.map { case (row, i) =>
         row.zipWithIndex.map { case (ch, j) =>
-          val adjacent = dirs.map { case (di, dj) => seen(grid, i, j, di, dj) }
+          val occupiedCnt = dirs.count { case (di, dj) => seen(grid, i, j, di, dj) == '#' }
           ch match {
-            case 'L' if adjacent.count(_ == '#') == 0 => '#'
-            case '#' if adjacent.count(_ == '#') >= 5 => 'L'
-            case _                                    => ch
+            case 'L' if occupiedCnt == 0 => '#'
+            case '#' if occupiedCnt >= 5 => 'L'
+            case _                       => ch
           }
         }.mkString
       }
