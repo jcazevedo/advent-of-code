@@ -6,9 +6,7 @@ class Day10 extends DailyChallenge[Int, Long] {
   def part1(adapters: List[Int]): Int = {
     val diffs = (0 :: adapters.sorted)
       .sliding(2)
-      .map { case List(lo, hi) =>
-        hi - lo
-      }
+      .map { case List(lo, hi) => hi - lo }
       .toList
     diffs.count(_ == 1) * (diffs.count(_ == 3) + 1)
   }
