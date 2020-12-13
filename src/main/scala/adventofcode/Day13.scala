@@ -1,5 +1,7 @@
 package adventofcode
 
+import scala.annotation.tailrec
+
 class Day13 extends DailyChallenge[Long, Long] {
   def part1(time: Long, buses: List[Long]): Long = {
     val times = buses.filter(_ >= 0).map(id => id -> ((id - time % id) % id))
@@ -9,6 +11,7 @@ class Day13 extends DailyChallenge[Long, Long] {
 
   def part2(buses: List[Long]): Long = {
     def modInv(a: Long, b: Long): Long = {
+      @tailrec
       def go(a: Long, b: Long, x0: Long, x1: Long): Long =
         if (a > 1) go(b, a % b, x1 - (a / b) * x0, x0) else x1
       if (b == 1) 1
