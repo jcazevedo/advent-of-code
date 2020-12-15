@@ -13,8 +13,7 @@ class Day15 extends DailyChallenge[Int, Int] {
   ): Int = {
     val toSpeak =
       if (n <= numbers.length) numbers(n - 1)
-      else if (!cache.contains(lastSpoken)) 0
-      else n - cache(lastSpoken) - 1
+      else cache.get(lastSpoken).fold(0)(x => n - x - 1)
 
     if (n == target) toSpeak else go(target, numbers, n + 1, toSpeak, cache.updated(lastSpoken, n - 1))
   }
