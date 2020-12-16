@@ -64,7 +64,7 @@ class Day16 extends DailyChallenge[Int, Long] {
     def dfs(l: Int): Boolean = {
       if (l == NIL) true
       else
-        graph(l).find { r => dist(matchesR(r)) == dist(l) + 1 && dfs(matchesR(r)) } match {
+        graph(l).find(r => dist(matchesR(r)) == dist(l) + 1 && dfs(matchesR(r))) match {
           case Some(r) =>
             matchesR(r) = l
             matchesL(l) = r
@@ -77,9 +77,7 @@ class Day16 extends DailyChallenge[Int, Long] {
     }
 
     var ans = 0
-    while (bfs()) {
-      graph.indices.foreach { l => if (matchesL(l) == NIL && dfs(l)) ans += 1 }
-    }
+    while (bfs()) ans += graph.indices.count(l => matchesL(l) == NIL && dfs(l))
 
     assert(ans == graph.length)
 
