@@ -47,21 +47,17 @@ class Day16 extends DailyChallenge[Int, Long] {
         }
       }
       dist(NIL) = INF
-      def loop(): Unit = {
-        if (q.nonEmpty) {
-          val l = q.dequeue()
-          if (dist(l) < dist(NIL)) {
-            graph(l).foreach { r =>
-              if (dist(matchesR(r)) == INF) {
-                dist(matchesR(r)) = dist(l) + 1
-                q.enqueue(matchesR(r))
-              }
+      while (q.nonEmpty) {
+        val l = q.dequeue()
+        if (dist(l) < dist(NIL)) {
+          graph(l).foreach { r =>
+            if (dist(matchesR(r)) == INF) {
+              dist(matchesR(r)) = dist(l) + 1
+              q.enqueue(matchesR(r))
             }
           }
-          loop()
         }
       }
-      loop()
       dist(NIL) != INF
     }
 
