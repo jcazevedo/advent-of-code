@@ -7,21 +7,18 @@ class Day19 extends DailyChallenge[Int, Int] {
 
   case class Rule(matches: List[List[Match]]) {
     private def unmatched(str: String, rules: Map[Int, Rule]): Set[Int] = {
-      def matchesRules(curr: String, toMatch: List[Match]): Set[Int] = {
-        if (curr.isEmpty) if (toMatch.isEmpty) Set(0) else Set.empty
-        else
-          toMatch match {
-            case ExactMatch(prefix) :: t =>
-              if (curr.startsWith(prefix)) matchesRules(curr.stripPrefix(prefix), t) else Set.empty
-            case RuleMatch(id) :: t =>
-              for {
-                p1 <- rules(id).unmatched(curr, rules)
-                p2 <- matchesRules(curr.takeRight(p1), t)
-              } yield p2
-            case Nil =>
-              Set(curr.length)
-          }
-      }
+      def matchesRules(curr: String, toMatch: List[Match]): Set[Int] =
+        toMatch match {
+          case ExactMatch(prefix) :: t =>
+            if (curr.startsWith(prefix)) matchesRules(curr.stripPrefix(prefix), t) else Set.empty
+          case RuleMatch(id) :: t =>
+            for {
+              p1 <- rules(id).unmatched(curr, rules)
+              p2 <- matchesRules(curr.takeRight(p1), t)
+            } yield p2
+          case Nil =>
+            Set(curr.length)
+        }
 
       matches.flatMap(matchesRules(str, _)).toSet
     }
