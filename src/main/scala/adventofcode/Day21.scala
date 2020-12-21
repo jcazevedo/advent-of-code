@@ -3,7 +3,7 @@ package adventofcode
 class Day21 extends DailyChallenge[Int, String] {
   case class Food(ingredients: List[String], allergens: List[String])
 
-  def getPossibleAllergents(foods: List[Food]): Map[String, Set[String]] =
+  def getPossibleAllergens(foods: List[Food]): Map[String, Set[String]] =
     foods.foldLeft(Map.empty[String, Set[String]]) { case (acc, food) =>
       val ingredientSet = food.ingredients.toSet
       food.allergens.foldLeft(acc) { case (acc, allergen) =>
@@ -15,14 +15,14 @@ class Day21 extends DailyChallenge[Int, String] {
     }
 
   def part1(foods: List[Food]): Int = {
-    val possibleAllergens = getPossibleAllergents(foods)
+    val possibleAllergens = getPossibleAllergens(foods)
     val allIngredients = foods.flatMap(_.ingredients).toSet
     val safeIngredients = allIngredients.filter(food => !possibleAllergens.values.exists(_(food)))
     safeIngredients.toList.map(ingredient => foods.count(_.ingredients.contains(ingredient))).sum
   }
 
   def part2(foods: List[Food]): String = {
-    val allergens = getPossibleAllergents(foods)
+    val allergens = getPossibleAllergens(foods)
 
     def go(
         toAssign: Set[String],
