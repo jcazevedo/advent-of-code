@@ -49,9 +49,7 @@ class Day21 extends DailyChallenge[Int, String] {
     val foodRegex = raw"""([^\(]+?) \(contains ([^\)]+?)\)""".r
     val foods = input
       .split("\n")
-      .map { case foodRegex(i, a) =>
-        Food(i.split(" ").toList, a.split(", ").toList)
-      }
+      .map { case foodRegex(i, a) => Food(i.split(" ").toList, a.split(", ").toList) }
       .toList
 
     (part1(foods), part2(foods))
