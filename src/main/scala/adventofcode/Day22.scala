@@ -38,34 +38,26 @@ class Day22 extends DailyChallenge[Int, Int] {
       val nextVisited = visited + ((state.player1, state.player2))
       val h1 +: t1 = state.player1.cards
       val h2 +: t2 = state.player2.cards
-      val winner = if (t1.length >= h1 && t2.length >= h2) {
-        val finalSt = playRecursive(State(player1 = Deck(t1.take(h1)), player2 = Deck(t2.take(h2)), None), nextVisited)
-        assert(finalSt.winner.nonEmpty)
-        finalSt.winner.get
-      } else if (h1 > h2) {
-        1
-      } else {
-        2
-      }
-      if (winner == 1)
-        playRecursive(
+      val winner =
+        if (t1.length >= h1 && t2.length >= h2)
+          playRecursive(State(player1 = Deck(t1.take(h1)), player2 = Deck(t2.take(h2)), None), nextVisited).winner.get
+        else if (h1 > h2) 1
+        else 2
+      playRecursive(
+        if (winner == 1)
           state
-            .copy(player1 = state.player1.copy(cards = t1 ++ Vector(h1, h2)), player2 = state.player2.copy(cards = t2)),
-          nextVisited
-        )
-      else
-        playRecursive(
+            .copy(player1 = state.player1.copy(cards = t1 ++ Vector(h1, h2)), player2 = state.player2.copy(cards = t2))
+        else
           state
             .copy(player1 = state.player1.copy(cards = t1), player2 = state.player2.copy(cards = t2 ++ Vector(h2, h1))),
-          nextVisited
-        )
+        nextVisited
+      )
     }
   }
 
   def playWith(deck1: Deck, deck2: Deck, f: State => State): Int = {
     val initialSt = State(deck1, deck2, None)
     val finalSt = f(initialSt)
-    assert(finalSt.winner.nonEmpty)
     val finalDeck = if (finalSt.winner.contains(1)) finalSt.player1.cards else finalSt.player2.cards
     finalDeck.reverse.zipWithIndex.map { case (v, i) => v * (i + 1) }.sum
   }
