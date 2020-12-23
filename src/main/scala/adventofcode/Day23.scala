@@ -32,7 +32,6 @@ class Day23 extends DailyChallenge[String, Long] {
   }
 
   case class Node(value: Int) {
-    var prev: Node = _
     var next: Node = _
   }
 
@@ -40,12 +39,8 @@ class Day23 extends DailyChallenge[String, Long] {
     val maxValue = 1000000
     val cupIndices = cups.map(_ - '0')
     val nodes = (cupIndices.map(Node) ++ (cupIndices.max + 1 to maxValue).map(Node)).toVector
-    nodes.sliding(2).foreach { case Vector(n1, n2) =>
-      n1.next = n2
-      n2.prev = n1
-    }
+    nodes.sliding(2).foreach { case Vector(n1, n2) => n1.next = n2 }
     nodes.last.next = nodes.head
-    nodes.head.prev = nodes.last
     val start = nodes.head
     val sortedNodes = nodes.sortBy(_.value)
 
@@ -55,7 +50,6 @@ class Day23 extends DailyChallenge[String, Long] {
         val sliceNumbers = slice.map(_.value)
         val nextCurr = slice.last.next
         curr.next = nextCurr
-        nextCurr.prev = curr
 
         def getTarget(v: Int): Int = {
           val target = if (v == 1) maxValue else v - 1
@@ -69,9 +63,7 @@ class Day23 extends DailyChallenge[String, Long] {
         val targetNode = sortedNodes(targetIdx - 1)
         val targetNodeNext = targetNode.next
         targetNode.next = slice.head
-        slice.head.prev = targetNode
         slice.last.next = targetNodeNext
-        targetNodeNext.prev = slice.last
 
         simulate(curr.next, turns - 1)
       }
