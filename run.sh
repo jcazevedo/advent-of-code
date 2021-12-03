@@ -9,6 +9,10 @@ case "$1" in
         cd day02-elm && elm make Main.elm --optimize --output main.js && cd .. && node day02-elm/run.js
         ;;
 
+    3)
+        fish day03-fish/day03.fish
+        ;;
+
     *)
         echo "Unknown or unavailable day"
         exit 1
