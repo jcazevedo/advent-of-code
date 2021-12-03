@@ -1,9 +1,6 @@
-module Main exposing (..)
+port module Main exposing (main)
 
-import Browser
-import Html exposing (Html, Attribute, div, textarea, text)
-import Html.Attributes exposing (..)
-import Html.Events exposing (onInput)
+import Platform exposing (Program)
 
 type alias Status =
   { horizontalPosition : Int
@@ -47,30 +44,42 @@ mult status = status.horizontalPosition * status.depth
 initialStatus : Status
 initialStatus = Status 0 0 0
 
+type alias InputType = String
+type alias OutputType = String
+
+port get : (InputType -> msg) -> Sub msg
+port put : OutputType -> Cmd msg
+
+main : Program Flags Model Msg
 main =
-  Browser.sandbox { init = init, update = update, view = view }
+    Platform.worker
+        { init = init
+        , update = update
+        , subscriptions = subscriptions
+        }
 
-type alias Model =
-  { content : String
-  }
+type alias Model = ()
+type Msg = Input String
+type alias Flags = ()
 
-init : Model
-init =
-  { content = "" }
 
-type Msg
-  = Change String
+init : Flags -> ( Model, Cmd Msg )
+init _ = ( (), Cmd.none )
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-  case msg of
-    Change newContent ->
-      { model | content = newContent }
+    case msg of
+        Input input -> ( model, put (run input))
 
-view : Model -> Html Msg
-view model =
-  div []
-    [ textarea [ id "input", placeholder "input", value model.content, onInput Change ] []
-    , div [ id "part1" ] [ text ("Part 1: " ++ (String.fromInt (mult (apply1 initialStatus (toCommands model.content))))) ]
-    , div [ id "part2" ] [ text ("Part 2: " ++ (String.fromInt (mult (apply2 initialStatus (toCommands model.content))))) ]
-    ]
+subscriptions : Model -> Sub Msg
+subscriptions _ =
+    get Input
+
+run : InputType -> OutputType
+run input =
+  let
+    commands = toCommands input
+    part1 = (mult (apply1 initialStatus commands))
+    part2 = (mult (apply2 initialStatus commands))
+  in
+    "Part 1: " ++ (String.fromInt part1) ++ "\nPart 2: " ++ (String.fromInt part2)
