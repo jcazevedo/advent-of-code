@@ -28,7 +28,7 @@ end
 function wins(board)
   row_sums = sum(board, dims=1)
   col_sums = sum(board, dims=2)
-  return length(filter(x -> x == 0, col_sums)) > 0 || length(filter(x -> x == 0, row_sums)) > 0
+  length(filter(x -> x == 0, col_sums)) > 0 || length(filter(x -> x == 0, row_sums)) > 0
 end
 
 function sum_unmarked(board)
