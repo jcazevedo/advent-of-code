@@ -13,6 +13,10 @@ case "$1" in
         fish day03-fish/day03.fish
         ;;
 
+    4)
+        julia day04-julia/day04.jl
+        ;;
+
     *)
         echo "Unknown or unavailable day"
         exit 1
