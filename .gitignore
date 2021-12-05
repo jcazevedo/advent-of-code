@@ -1,0 +1,10 @@
+*
+!Makefile
+!README.md
+!LICENSE.md
+!*.*
+!*/
+
+*~
+.idea
+compile_commands.json
