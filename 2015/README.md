@@ -1,6 +1,6 @@
-# Advent of Code 2015
+# Advent of Code 2015 solutions
 
-This repository contains my solutions to [Advent of Code
+This directory tree contains my solutions to [Advent of Code
 2015][advent-of-code-2015] in Scala. You can run them using [sbt][sbt] by typing
 the following, replacing `XX` with the day of the desired problem:
 
