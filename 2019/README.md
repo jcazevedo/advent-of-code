@@ -1,4 +1,4 @@
-# Advent of Code 2019
+# Advent of Code 2019 solutions
 
 My solutions for [Advent of Code 2019][adventofcode2019], in C++.
 
