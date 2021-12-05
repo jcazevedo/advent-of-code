@@ -2,7 +2,6 @@ var fs = require('fs');
 var input = fs.readFileSync('inputs/05.input', 'utf8');
 
 var EPS = 1e-9;
-var SHIFT = 1000;
 var segments = [];
 
 input.split('\n').forEach(line => {
@@ -52,8 +51,6 @@ var intersectionPoints = (seg1, seg2) => {
 
     var before = (point1, point2) => point1.x < point2.x - EPS || (Math.abs(point1.x - point2.x) < EPS && point1.y < point2.y - EPS);
 
-    var equal = (point1, point2) => Math.abs(point1.x - point2.x) < EPS && Math.abs(point1.y - point2.y) < EPS;
-
     if (!intersect1d(seg1.from.x, seg1.to.x, seg2.from.x, seg2.to.x) ||
         !intersect1d(seg1.from.y, seg1.to.y, seg2.from.y, seg2.to.y)) {
         return [];
@@ -83,7 +80,7 @@ var intersectionPoints = (seg1, seg2) => {
         if (before(seg2.to, seg1.to)) right = seg2.to;
         var ans = [];
         ans.push(left);
-        while (!equal(left, right)) {
+        while (before(left, right)) {
             var next = {
                 x: Math.round(left.x + Math.sign(right.x - left.x)),
                 y: Math.round(left.y + Math.sign(right.y - left.y))
@@ -104,8 +101,8 @@ for (var i = 0; i < segments.length; ++i) {
         var points = intersectionPoints(segments[i], segments[j]);
         for (var k = 0; k < points.length; ++k) {
             if (isHorizontal(segments[i]) && isHorizontal(segments[j]))
-                horizontalIntersections.add(points[k].x * SHIFT + points[k].y);
-            intersections.add(points[k].x * SHIFT + points[k].y);
+                horizontalIntersections.add(points[k].x + "," + points[k].y);
+            intersections.add(points[k].x + "," + points[k].y);
         }
     }
 }
