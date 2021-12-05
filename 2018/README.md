@@ -1,9 +1,9 @@
-# Advent of Code 2018
+# Advent of Code 2018 solutions
 
 This repository contains my solutions to [Advent of Code
-2018][advent-of-code-2018]. [After][2015] [three][2016] [years][2017] solving
-the problems exclusively in Scala, I decided to solve each day of 2018 in a
-different programming language.
+2018][advent-of-code-2018]. After three years solving the problems exclusively
+in Scala, I decided to solve each day of 2018 in a different programming
+language.
 
 ## Rules
 
@@ -62,6 +62,3 @@ ones by looking at the
 script.
 
 [advent-of-code-2018]: https://adventofcode.com/2018
-[2015]: https://github.com/jcazevedo/advent-of-code-2015
-[2016]: https://github.com/jcazevedo/advent-of-code-2016
-[2017]: https://github.com/jcazevedo/advent-of-code-2017
