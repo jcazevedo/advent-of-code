@@ -17,6 +17,10 @@ case "$1" in
         julia day04-julia/day04.jl
         ;;
 
+    5)
+        node day05-javascript/day05.js
+        ;;
+
     *)
         echo "Unknown or unavailable day"
         exit 1
