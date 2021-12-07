@@ -1,6 +1,6 @@
 # Advent of Code 2018 solutions
 
-This repository contains my solutions to [Advent of Code
+This directory tree contains my solutions to [Advent of Code
 2018][advent-of-code-2018]. After three years solving the problems exclusively
 in Scala, I decided to solve each day of 2018 in a different programming
 language.
