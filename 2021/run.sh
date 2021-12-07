@@ -21,6 +21,10 @@ case "$1" in
         node day05-javascript/day05.js
         ;;
 
+    6)
+        sbcl --script day06-common-lisp/day06.lisp
+        ;;
+
     *)
         echo "Unknown or unavailable day"
         exit 1
