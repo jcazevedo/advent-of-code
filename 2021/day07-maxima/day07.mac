@@ -1,0 +1,32 @@
+s: openr("inputs/07.input")$
+line: readline(s)$
+close(s)$
+
+positions: map(parse_string, split(line,","))$
+minV: positions[1]$
+maxV: positions[1]$
+part1: 0$
+part2: 0$
+
+sum_to(n) := (n * (n + 1)) / 2$
+
+for i from 1 thru length(positions) do (
+  maxV: max(maxV, positions[i]),
+  minV: min(minV, positions[i]),
+  part1: part1 + positions[i],
+  part2: part2 + sum_to(positions[i])
+)$
+
+for i from minV thru maxV do (
+  curr1: 0,
+  curr2: 0,
+  for j from 1 thru length(positions) do (
+    curr1: curr1 + abs(positions[j] - i),
+    curr2: curr2 + sum_to(abs(positions[j] - i))
+  ),
+  part1: min(part1, curr1),
+  part2: min(part2, curr2)
+)$
+
+concat("Part 1: ", part1);
+concat("Part 2: ", part2);

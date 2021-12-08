@@ -25,6 +25,10 @@ case "$1" in
         sbcl --script day06-common-lisp/day06.lisp
         ;;
 
+    7)
+        maxima --very-quiet -b day07-maxima/day07.mac
+        ;;
+
     *)
         echo "Unknown or unavailable day"
         exit 1
