@@ -29,6 +29,10 @@ case "$1" in
         maxima --very-quiet -b day07-maxima/day07.mac
         ;;
 
+    8)
+        clang day08-objective-c/day08.m -o day08 && ./day08
+        ;;
+
     *)
         echo "Unknown or unavailable day"
         exit 1
