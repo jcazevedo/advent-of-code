@@ -33,6 +33,10 @@ case "$1" in
         clang day08-objective-c/day08.m -o day08 && ./day08
         ;;
 
+    9)
+        fpc day09-pascal/day09.pas && ./day09-pascal/day09
+        ;;
+
     *)
         echo "Unknown or unavailable day"
         exit 1
