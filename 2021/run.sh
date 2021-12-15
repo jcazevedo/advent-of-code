@@ -37,6 +37,12 @@ case "$1" in
         fpc day09-pascal/day09.pas && ./day09-pascal/day09
         ;;
 
+    10)
+        # This is currently assuming PostgreSQL is running.
+        # docker run -p 5432:5432 -e POSTGRES_PASSWORD=postgres -v <inputs>:/inputs postgres:12.5-alpine
+        psql "postgresql://postgres:postgres@localhost:5432/postgres" -f day10-plpgsql/day10.sql
+        ;;
+
     *)
         echo "Unknown or unavailable day"
         exit 1
