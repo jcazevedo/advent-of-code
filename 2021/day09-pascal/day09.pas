@@ -1,8 +1,8 @@
 program Day09;
 
 const
-   INPUT                               = 'inputs/09.input';
-   MAX_SIZE                            = 1000;
+   INPUT                             = 'inputs/09.input';
+   MAX_SIZE                          = 1000;
    DIRS : array[0..3, 0..1] of Int32 = ((0, 1), (1, 0), (0, -1), (-1, 0));
 
 var
