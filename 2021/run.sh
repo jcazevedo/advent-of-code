@@ -43,6 +43,10 @@ case "$1" in
         psql "postgresql://postgres:postgres@localhost:5432/postgres" -f day10-plpgsql/day10.sql
         ;;
 
+    11)
+        tclsh day11-tcl/day11.tcl
+        ;;
+
     *)
         echo "Unknown or unavailable day"
         exit 1
