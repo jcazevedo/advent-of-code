@@ -20,16 +20,18 @@
                             (else (split a (+ 1 b)))))))
       (split 0 0))))
 
-(define (read-input file-input-port graph)
-  (let* ((line (read-line file-input-port)))
-    (if (eof-object? line)
-        graph
-        (let* ((split (string-split line #\-))
-               (from (car split))
-               (to (car (cdr split)))
-               (with-from-to (assoc-put graph from (cons to (assoc-get graph from ()))))
-               (with-from-to-and-to-from (assoc-put with-from-to to (cons from (assoc-get with-from-to to ())))))
-          (read-input file-input-port with-from-to-and-to-from)))))
+(define (read-input file-input-port)
+  (letrec ((read-input-aux (lambda (graph)
+                             (let* ((line (read-line file-input-port)))
+                               (if (eof-object? line)
+                                   graph
+                                   (let* ((split (string-split line #\-))
+                                          (from (car split))
+                                          (to (car (cdr split)))
+                                          (with-from-to (assoc-put graph from (cons to (assoc-get graph from ()))))
+                                          (with-from-to-and-to-from (assoc-put with-from-to to (cons from (assoc-get with-from-to to ())))))
+                                     (read-input-aux with-from-to-and-to-from)))))))
+    (read-input-aux (assoc-init))))
 
 (define (small-cave? cave-name)
   (char>=? (car (string->list cave-name)) #\a))
@@ -71,8 +73,7 @@
 
 (begin
   (let* ((source (open-input-file "inputs/12.input"))
-         (empty-graph (assoc-init))
-         (graph (read-input source empty-graph))
+         (graph (read-input source))
          (paths-1 (valid-paths graph can-use-node-part1))
          (paths-2 (valid-paths graph can-use-node-part2)))
     (display "Part 1: ")
