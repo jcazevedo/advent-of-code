@@ -47,6 +47,10 @@ case "$1" in
         tclsh day11-tcl/day11.tcl
         ;;
 
+    12)
+        mit-scheme --quiet < day12-scheme/day12.scm
+        ;;
+
     *)
         echo "Unknown or unavailable day"
         exit 1
