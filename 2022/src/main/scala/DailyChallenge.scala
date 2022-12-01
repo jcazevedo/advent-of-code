@@ -1,5 +1,3 @@
-package adventofcode
-
 import scala.io.Source
 
 trait DailyChallenge[P1, P2] {

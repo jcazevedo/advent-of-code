@@ -1,5 +1,3 @@
-package adventofcode
-
 object Day01 extends DailyChallenge[Int, Int] {
   def run(input: String): (Int, Int) = {
     val caloriesCarried = input.split("\n").foldRight(List.empty[Int]) {
