@@ -1,9 +1,9 @@
 object Day01 extends DailyChallenge[Int, Int] {
   def run(input: String): (Int, Int) = {
-    val caloriesCarried = input.split("\n").foldRight(List.empty[Int]) {
-      case (str, Nil)                      => List(str.toInt)
-      case (str, curr) if str.trim.isEmpty => 0 :: curr
-      case (str, h :: t)                   => (h + str.toInt) :: t
+    val caloriesCarried = input.split("\n").map(_.trim).foldRight(List.empty[Int]) {
+      case (str, Nil)    => 0 :: Nil
+      case ("", curr)    => 0 :: curr
+      case (str, h :: t) => (h + str.toInt) :: t
     }
 
     val part1 = caloriesCarried.max
