@@ -7,11 +7,6 @@ object Day15 extends DailyChallenge[Int, Int] {
 
     val height = grid.length
     val width = grid(0).length
-    val start = (0, 0)
-    val finish = (height * rep - 1, width * rep - 1)
-
-    bestAt(start) = 0
-    pq.enqueue((0, start))
 
     def costAt(h: Int, w: Int): Int = {
       val initH = h % grid.length
@@ -19,6 +14,12 @@ object Day15 extends DailyChallenge[Int, Int] {
       val additional = h / height + w / width
       ((grid(initH)(initW) + additional - 1) % 9) + 1
     }
+
+    val start = (0, 0)
+    val finish = (height * rep - 1, width * rep - 1)
+
+    bestAt(start) = 0
+    pq.enqueue((0, start))
 
     while (pq.nonEmpty) {
       val (currDistNeg, (currH, currW)) = pq.dequeue()
