@@ -8,8 +8,8 @@ object Day07 extends DailyChallenge[Long, Long] {
       if (rest.isEmpty) copy(contained = contained + (name -> node))
       else
         copy(contained = contained + (name -> (contained.get(name) match {
-          case Some(d: Directory)   => d.add(node, rest.head, rest.tail)
-          case None | Some(File(_)) => Directory().add(node, rest.head, rest.tail)
+          case Some(d: Directory) => d.add(node, rest.head, rest.tail)
+          case _                  => Directory().add(node, rest.head, rest.tail)
         })))
   }
   case class File(size: Long) extends Node
@@ -56,7 +56,7 @@ object Day07 extends DailyChallenge[Long, Long] {
     n match {
       case d @ Directory(contained) =>
         Map(curr.toList -> totalSize(d)) ++ contained.flatMap({ case (k, v) => getDirSizes(v, curr :+ k) })
-      case f: File => Map.empty
+      case _ => Map.empty
     }
 
   def run(input: String): (Long, Long) = {
