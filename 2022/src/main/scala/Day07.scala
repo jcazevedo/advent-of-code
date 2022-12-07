@@ -72,7 +72,7 @@ object Day07 extends DailyChallenge[Long, Long] {
     val usedSpace = totalSize(baseDir)
 
     val part1 = getDirSizes(baseDir).filter(_._2 < 100000L).values.sum
-    val part2 = getDirSizes(baseDir).filter(usedSpace - _._2 < 40000000L).values.toList.min
+    val part2 = getDirSizes(baseDir).filter(usedSpace - _._2 < 40000000L).values.min
 
     (part1, part2)
   }
