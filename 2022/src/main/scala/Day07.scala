@@ -21,37 +21,33 @@ object Day07 extends DailyChallenge[Long, Long] {
   }
 
   def buildTree(input: List[String]): Directory = {
-    var ans = Directory()
-
-    def aux(commands: List[String], directories: List[String]): Unit = {
-      if (commands.nonEmpty) {
+    def aux(commands: List[String], directories: List[String], root: Directory): Directory = {
+      if (commands.isEmpty) root
+      else {
         val currCommand = commands.head.substring(2, 4)
         currCommand match {
           case "cd" =>
             val target = commands.head.drop(5)
-            if (target == "/") aux(commands.tail, directories = List.empty)
-            else if (target == "..") aux(commands.tail, directories.tail)
-            else aux(commands.tail, target :: directories)
+            if (target == "/") aux(commands.tail, directories = List.empty, root)
+            else if (target == "..") aux(commands.tail, directories.tail, root)
+            else aux(commands.tail, target :: directories, root)
 
           case "ls" =>
             val output = commands.tail.takeWhile(!_.startsWith("$"))
-            output.foreach(line =>
+            val nextRoot = output.foldLeft(root)((curr, line) =>
               if (line.startsWith("dir")) {
                 val name = line.stripPrefix("dir ")
-                ans = ans.add(Directory(), (name :: directories).reverse)
+                curr.add(Directory(), (name :: directories).reverse)
               } else {
                 val Array(size, name) = line.split("\\s+")
-                ans = ans.add(File(size.toLong), (name :: directories).reverse)
+                curr.add(File(size.toLong), (name :: directories).reverse)
               }
             )
-            aux(commands.tail.drop(output.length), directories)
+            aux(commands.tail.drop(output.length), directories, nextRoot)
         }
       }
     }
-
-    aux(input, List.empty)
-
-    ans
+    aux(input, List.empty, Directory())
   }
 
   def totalSize(n: Node): Long =
