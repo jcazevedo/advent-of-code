@@ -28,9 +28,6 @@ object Day20 extends DailyChallenge[Int, Int] {
     )
   }
 
-  def print(image: Vector[String]): Unit =
-    image.foreach(println)
-
   def run(input: String): (Int, Int) = {
     val lines = input.split("\n").map(_.trim).toList
     val imageEnhancementAlgorithm = lines.head
