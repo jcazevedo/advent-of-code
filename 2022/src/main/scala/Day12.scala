@@ -1,7 +1,7 @@
 import scala.collection.mutable
 
 object Day12 extends DailyChallenge[Int, Int] {
-  final val Dirs = List((1, 0), (-1, 0), (0, 1), (0, -1))
+  final val Steps = List((1, 0), (-1, 0), (0, 1), (0, -1))
 
   def bfs(start: (Int, Int), connected: ((Int, Int), (Int, Int)) => Boolean): Map[(Int, Int), Int] = {
     val dists = mutable.Map.empty[(Int, Int), Int]
@@ -13,7 +13,7 @@ object Day12 extends DailyChallenge[Int, Int] {
     while (q.nonEmpty) {
       val (i, j) = q.dequeue()
 
-      Dirs.foreach({ case (di, dj) =>
+      Steps.foreach({ case (di, dj) =>
         val ni = i + di
         val nj = j + dj
         if (!dists.contains((ni, nj)) && connected((i, j), (ni, nj))) {
@@ -37,24 +37,19 @@ object Day12 extends DailyChallenge[Int, Int] {
       else if (grid(i)(j) == 'E') 'z'
       else grid(i)(j)
 
+    def inGrid(i: Int, j: Int): Boolean =
+      i >= 0 && i < height && j >= 0 && j < width
+
     val start =
       (0 until height).flatMap(i => (0 until width).map(j => (i, j))).find({ case (i, j) => grid(i)(j) == 'S' }).get
     val finish =
       (0 until height).flatMap(i => (0 until width).map(j => (i, j))).find({ case (i, j) => grid(i)(j) == 'E' }).get
 
-    val distsFromStart = bfs(
-      start,
-      { case ((fi, fj), (ti, tj)) =>
-        ti >= 0 && ti < height && tj >= 0 && tj < width && cellHeight(ti, tj) - cellHeight(fi, fj) <= 1
-      }
-    )
+    val distsFromStart =
+      bfs(start, { case ((fi, fj), (ti, tj)) => inGrid(ti, tj) && cellHeight(ti, tj) - cellHeight(fi, fj) <= 1 })
 
-    val distsFromFinish = bfs(
-      finish,
-      { case ((fi, fj), (ti, tj)) =>
-        ti >= 0 && ti < height && tj >= 0 && tj < width && cellHeight(fi, fj) - cellHeight(ti, tj) <= 1
-      }
-    )
+    val distsFromFinish =
+      bfs(finish, { case ((fi, fj), (ti, tj)) => inGrid(ti, tj) && cellHeight(fi, fj) - cellHeight(ti, tj) <= 1 })
 
     val part1 = distsFromStart(finish)
     val part2 = distsFromFinish.filter({ case ((i, j), _) => cellHeight(i, j) == 'a' }).values.min
