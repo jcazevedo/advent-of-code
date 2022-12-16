@@ -67,6 +67,7 @@ object Day15 extends DailyChallenge[Int, Long] {
 
     val part1 = {
       val y = 2000000
+
       grid(y).totalLength - readings
         .map(_.beacon)
         .toSet
@@ -78,10 +79,10 @@ object Day15 extends DailyChallenge[Int, Long] {
       val maxV = 4000000
 
       val (x, y) = (for {
-        y <- (minV to maxV)
+        y <- minV to maxV
         trimmed = grid(y).trim(minV, maxV).intervals
         if trimmed.length > 1 || trimmed.length == 0 || trimmed.head.from > minV || trimmed.head.to < maxV
-        x <- (minV to maxV)
+        x <- minV to maxV
         if !trimmed.exists(interval => x >= interval.from && x <= interval.to)
       } yield (x, y)).head
 
