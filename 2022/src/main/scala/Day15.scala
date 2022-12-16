@@ -24,7 +24,7 @@ object Day15 extends DailyChallenge[Int, Long] {
     }
 
     def totalLength: Int =
-      intervals.map(interval => (interval.to - interval.from) + 1).sum
+      intervals.map(interval => interval.to - interval.from + 1).sum
 
     def trim(from: Int, to: Int): IntervalList =
       IntervalList(
@@ -44,8 +44,8 @@ object Day15 extends DailyChallenge[Int, Long] {
       val manhattanDistance = math.abs(bx - sx) + math.abs(by - sy)
       (0 to manhattanDistance).foreach { dist =>
         val interval = Interval(sx - (manhattanDistance - dist), sx + (manhattanDistance - dist))
-        grid(sy - dist) = grid.getOrElse(sy - dist, IntervalList.empty).add(interval)
-        grid(sy + dist) = grid.getOrElse(sy + dist, IntervalList.empty).add(interval)
+        grid.updateWith(sy - dist)(_.map(_.add(interval)).orElse(Some(IntervalList(Vector(interval)))))
+        grid.updateWith(sy + dist)(_.map(_.add(interval)).orElse(Some(IntervalList(Vector(interval)))))
       }
     }
 
