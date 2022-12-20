@@ -31,30 +31,29 @@ object Day16 extends DailyChallenge[Int, Int] {
 
   def mostPressure(graph: Map[String, Valve], maxMinutes: Int): Int = {
     // We're relying on the fact that for N valves with flow rate > 0, 2^N is small enough.
-    case class State(currentValve: String, minutes: Int, valvesOn: Int, score: Int)
+    case class State(currentValve: String, minutes: Int, valvesOn: Int)
 
     val valvesIdx = graph.filter(_._2.flowRate > 0).map(_._1).zipWithIndex.toMap
     val dists = distances(graph)
 
-    val best = mutable.Map.empty[(Int, Int), Int]
+    val best = mutable.Map.empty[State, Int]
     val q = mutable.Queue.empty[State]
-    val start = State("AA", 0, 0, 0)
+    val start = State("AA", 0, 0)
     q.enqueue(start)
-    best((0, 0)) = 0
+    best(start) = 0
 
     while (q.nonEmpty) {
-      val curr @ State(currentValve, minutes, valvesOn, currScore) = q.dequeue()
+      val curr @ State(currentValve, minutes, valvesOn) = q.dequeue()
+      val currScore = best(curr)
 
       valvesIdx.foreach { case (v, idx) =>
         if ((valvesOn & (1 << idx)) == 0 && dists((currentValve, v)) != -1) {
           val nextMinutes = minutes + dists((currentValve, v)) + 1
           if (nextMinutes < maxMinutes) {
             val nextScore = currScore + (maxMinutes - nextMinutes) * graph(v).flowRate
-            val nextState = State(v, nextMinutes, valvesOn | (1 << idx), nextScore)
-            if (
-              !best.contains((nextState.valvesOn, nextMinutes)) || best((nextState.valvesOn, nextMinutes)) < nextScore
-            ) {
-              best((nextState.valvesOn, nextMinutes)) = nextScore
+            val nextState = State(v, nextMinutes, valvesOn | (1 << idx))
+            if (!best.contains(nextState) || best(nextState) < nextScore) {
+              best(nextState) = nextScore
               q.enqueue(nextState)
             }
           }
@@ -72,18 +71,17 @@ object Day16 extends DailyChallenge[Int, Int] {
         minutes1: Int,
         currentValve2: String,
         minutes2: Int,
-        valvesOn: Int,
-        score: Int
+        valvesOn: Int
     )
 
     val valvesIdx = graph.filter(_._2.flowRate > 0).map(_._1).zipWithIndex.toMap
     val dists = distances(graph)
 
-    val best = mutable.Map.empty[(Int, Int), Int]
+    val best = mutable.Map.empty[State, Int]
     val q = mutable.Queue.empty[State]
-    val start = State("AA", 0, "AA", 0, 0, 0)
+    val start = State("AA", 0, "AA", 0, 0)
     q.enqueue(start)
-    best((0, 0)) = 0
+    best(start) = 0
 
     def getNext(valve: String, minutes: Int, valvesOn: Int): List[(String, Int)] =
       (valve, minutes) :: valvesIdx.toList.flatMap { case (nv, i) =>
@@ -93,7 +91,8 @@ object Day16 extends DailyChallenge[Int, Int] {
       }
 
     while (q.nonEmpty) {
-      val curr @ State(v1, m1, v2, m2, valvesOn, currScore) = q.dequeue()
+      val curr @ State(v1, m1, v2, m2, valvesOn) = q.dequeue()
+      val currScore = best(curr)
 
       for {
         (nv1, nm1) <- getNext(v1, m1, valvesOn)
@@ -106,12 +105,11 @@ object Day16 extends DailyChallenge[Int, Int] {
           (if (graph(nv1).flowRate > 0) (1 << valvesIdx(nv1)) else 0) |
           (if (graph(nv2).flowRate > 0) (1 << valvesIdx(nv2)) else 0)
         nextState =
-          if (nv1 < nv2) State(nv1, nm1, nv2, nm2, nextValvesOn, nextScore)
-          else State(nv2, nm2, nv1, nm1, nextValvesOn, nextScore)
-        if !best.contains((nextState.valvesOn, math.max(nextState.minutes1, nextState.minutes2))) ||
-          best((nextState.valvesOn, math.max(nextState.minutes1, nextState.minutes2))) < nextScore
+          if (nv1 < nv2) State(nv1, nm1, nv2, nm2, nextValvesOn)
+          else State(nv2, nm2, nv1, nm1, nextValvesOn)
+        if !best.contains(nextState) || best(nextState) < nextScore
       } {
-        best((nextState.valvesOn, math.max(nextState.minutes1, nextState.minutes2))) = nextScore
+        best(nextState) = nextScore
         q.enqueue(nextState)
       }
     }
