@@ -79,11 +79,11 @@ object Day16 extends DailyChallenge[Int, Int] {
     val valvesIdx = graph.filter(_._2.flowRate > 0).map(_._1).zipWithIndex.toMap
     val dists = distances(graph)
 
-    val best = mutable.Map.empty[(Int, Int, Int), Int]
+    val best = mutable.Map.empty[(Int, Int), Int]
     val q = mutable.Queue.empty[State]
     val start = State("AA", 0, "AA", 0, 0, 0)
     q.enqueue(start)
-    best((0, 0, 0)) = 0
+    best((0, 0)) = 0
 
     def getNext(valve: String, minutes: Int, valvesOn: Int): List[(String, Int)] =
       (valve, minutes) :: valvesIdx.toList.flatMap { case (nv, i) =>
@@ -99,14 +99,8 @@ object Day16 extends DailyChallenge[Int, Int] {
         (nv1, nm1) <- getNext(v1, m1, valvesOn)
         (nv2, nm2) <- getNext(v2, m2, valvesOn)
         if nv2 != nv1
-        nv1Score =
-          if (valvesIdx.contains(nv1) && (valvesOn & (1 << valvesIdx(nv1))) == 0)
-            (maxMinutes - nm1) * graph(nv1).flowRate
-          else 0
-        nv2Score =
-          if (valvesIdx.contains(nv2) && (valvesOn & (1 << valvesIdx(nv2))) == 0)
-            (maxMinutes - nm2) * graph(nv2).flowRate
-          else 0
+        nv1Score = if (nm1 != m1) (maxMinutes - nm1) * graph(nv1).flowRate else 0
+        nv2Score = if (nm2 != m2) (maxMinutes - nm2) * graph(nv2).flowRate else 0
         nextScore = currScore + nv1Score + nv2Score
         nextValvesOn = valvesOn |
           (if (graph(nv1).flowRate > 0) (1 << valvesIdx(nv1)) else 0) |
@@ -114,11 +108,10 @@ object Day16 extends DailyChallenge[Int, Int] {
         nextState =
           if (nv1 < nv2) State(nv1, nm1, nv2, nm2, nextValvesOn, nextScore)
           else State(nv2, nm2, nv1, nm1, nextValvesOn, nextScore)
-        if !best.contains((nextState.valvesOn, nextState.minutes1, nextState.minutes2)) || best(
-          (nextState.valvesOn, nextState.minutes1, nextState.minutes2)
-        ) < nextScore
+        if !best.contains((nextState.valvesOn, math.max(nextState.minutes1, nextState.minutes2))) ||
+          best((nextState.valvesOn, math.max(nextState.minutes1, nextState.minutes2))) < nextScore
       } {
-        best((nextState.valvesOn, nextState.minutes1, nextState.minutes2)) = nextScore
+        best((nextState.valvesOn, math.max(nextState.minutes1, nextState.minutes2))) = nextScore
         q.enqueue(nextState)
       }
     }
