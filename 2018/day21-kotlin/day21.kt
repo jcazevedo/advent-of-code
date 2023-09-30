@@ -161,7 +161,7 @@ fun maxValue(ipReg: Int, instructions: List<OpCode>): Int {
   return -1
 }
 
-fun main(args: Array<String>) {
+fun main() {
   val lines = File("21.input").useLines { it.toList() }
   val instructions = lines.drop(1).map({ l -> createInstruction(l) }).filterNotNull()
   val ipReg = lines[0].split(" ")[1].toInt()
