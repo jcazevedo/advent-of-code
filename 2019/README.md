@@ -1,6 +1,6 @@
 # Advent of Code 2019 solutions
 
-My solutions for [Advent of Code 2019][adventofcode2019], in C++.
+My solutions to [Advent of Code 2019][adventofcode2019], in C++.
 
 ## Instructions
 
