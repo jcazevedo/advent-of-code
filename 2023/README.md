@@ -14,7 +14,7 @@ command, replacing `XX` with the desired day:
     $ make dayXX
 
 The previous command produces a `dayXX` binary. Unless stated otherwise, every
-problem reads its input from the corresponding `dayXX.in` file and writes to the
-standard output.
+problem reads its input from the corresponding `input/dayXX.in` file and writes
+to the standard output.
 
 [adventofcode2023]: https://adventofcode.com/2023
