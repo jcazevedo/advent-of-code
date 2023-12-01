@@ -62,7 +62,7 @@ int solve(TrieNode* trie, const vector<string>& lines) {
 
 int main() {
   vector<string> lines;
-  ifstream fin("day01.in");
+  ifstream fin("input/day01.in");
   string s;
   while (fin >> s) { lines.push_back(s); }
   fin.close();
