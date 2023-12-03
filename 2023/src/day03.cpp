@@ -15,23 +15,23 @@ tuple<int, int> solve(const vector<string>& grid) {
       if (isdigit(grid[i][j]) || grid[i][j] == '.') { continue; }
       int gear = 1, gearNumbers = 0;
       for (int di = -1; di <= 1; ++di) {
-        if (i + di < 0 || i + di >= M) { continue; }
+        int ni = i + di;
+        if (ni < 0 || ni >= M) { continue; }
         for (int dj = -1; dj <= 1; ++dj) {
-          if (j + dj < 0 || j + dj >= N) { continue; }
-          int ni = i + di;
           int nj = j + dj;
-          if (isdigit(grid[ni][nj]) && !visited[ni][nj]) {
-            while (nj >= 0 && isdigit(grid[ni][nj])) { nj--; }
-            int num = 0;
-            while (++nj < N && isdigit(grid[ni][nj])) {
-              visited[ni][nj] = true;
-              num = num * 10 + grid[ni][nj] - '0';
-            }
-            part1 += num;
-            if (grid[i][j] == '*') {
-              gear *= num;
-              gearNumbers++;
-            }
+          if (nj < 0 || nj >= N || !isdigit(grid[ni][nj]) || visited[ni][nj]) {
+            continue;
+          }
+          while (nj >= 0 && isdigit(grid[ni][nj])) { nj--; }
+          int num = 0;
+          while (++nj < N && isdigit(grid[ni][nj])) {
+            visited[ni][nj] = true;
+            num = num * 10 + grid[ni][nj] - '0';
+          }
+          part1 += num;
+          if (grid[i][j] == '*') {
+            gear *= num;
+            gearNumbers++;
           }
         }
       }
