@@ -32,24 +32,23 @@ int part1(const vector<Card>& cards) {
   return ans;
 }
 
-int total(const vector<Card>& cards,
-          int from,
-          int to,
-          unordered_map<int, int>& cache) {
-  int ans = 0;
-  for (int c = from; c <= to; ++c) {
-    ans += 1;
-    if (!cache.count(cards[c].number)) {
-      cache[cards[c].number] = matches(cards[c]);
-    }
-    ans += total(cards, c + 1, c + cache[cards[c].number], cache);
+int total(int idx, const vector<Card>& cards, unordered_map<int, int>& cache) {
+  if (cache.count(cards[idx].number)) { return cache[cards[idx].number]; }
+  int ans = 1;
+  int m = matches(cards[idx]);
+  for (int next = idx + 1; next <= idx + m; ++next) {
+    ans += total(next, cards, cache);
   }
+  cache[cards[idx].number] = ans;
   return ans;
 }
 
 int part2(const vector<Card>& cards) {
+  int N = cards.size();
   unordered_map<int, int> cache;
-  return total(cards, 0, cards.size() - 1, cache);
+  int ans = 0;
+  for (int i = 0; i < N; ++i) { ans += total(i, cards, cache); }
+  return ans;
 }
 
 int main() {
