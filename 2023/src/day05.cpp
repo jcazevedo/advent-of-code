@@ -101,7 +101,8 @@ int main() {
     }
   }
   fin.close();
-  for (auto itr = ranges.begin(); itr != ranges.end(); ++itr) {
+  for (map<string, vector<Range>>::iterator itr = ranges.begin();
+       itr != ranges.end(); ++itr) {
     sort(itr->second.begin(), itr->second.end(),
          [&](Range a, Range b) { return a.source < b.source; });
   }
