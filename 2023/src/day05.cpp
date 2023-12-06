@@ -38,29 +38,26 @@ long long lowestValue(string from,
             r = m;
           }
         }
+        long long rangeLength, nextSource;
         if (l == 0 || (l < N && source >= currentRanges[l - 1].source +
                                               currentRanges[l - 1].length)) {
-          long long rangeLength = min(currentRanges[l].source - source, length);
-          ans = min(ans,
-                    lowestValue(get<1>(itr->first), to, source, rangeLength));
-          source += rangeLength;
-          length -= rangeLength;
+          nextSource = source;
+          rangeLength = min(currentRanges[l].source - source, length);
         } else if (source <
                    currentRanges[l - 1].source + currentRanges[l - 1].length) {
-          long long rangeLength =
-              min(currentRanges[l - 1].length -
-                      (source - currentRanges[l - 1].source),
-                  length);
-          ans = min(ans, lowestValue(get<1>(itr->first), to,
-                                     currentRanges[l - 1].destination + source -
-                                         currentRanges[l - 1].source,
-                                     rangeLength));
-          length -= rangeLength;
-          source += rangeLength;
+          nextSource = currentRanges[l - 1].destination + source -
+                       currentRanges[l - 1].source;
+          rangeLength = min(currentRanges[l - 1].length -
+                                (source - currentRanges[l - 1].source),
+                            length);
         } else {
-          ans = min(ans, lowestValue(get<1>(itr->first), to, source, length));
-          length = 0;
+          nextSource = source;
+          rangeLength = length;
         }
+        ans = min(ans,
+                  lowestValue(get<1>(itr->first), to, nextSource, rangeLength));
+        length -= rangeLength;
+        source += rangeLength;
       }
       break;
     }
