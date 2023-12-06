@@ -24,29 +24,28 @@ long long lowestValue(string from,
                       long long length) {
   if (from == to) { return source; }
   long long ans = numeric_limits<long long>::max();
-  vector<Range>& currentRanges = ranges[from];
-  int N = currentRanges.size();
+  int N = ranges[from].size();
   while (length != 0) {
     int l = 0, r = N;
     while (l < r) {
       int m = l + (r - l) / 2;
-      if (source >= currentRanges[m].source) {
+      if (source >= ranges[from][m].source) {
         l = m + 1;
       } else {
         r = m;
       }
     }
     long long rangeLength, nextSource;
-    if (l == 0 || (l < N && source >= currentRanges[l - 1].source +
-                                          currentRanges[l - 1].length)) {
+    if (l == 0 || (l < N && source >= ranges[from][l - 1].source +
+                                          ranges[from][l - 1].length)) {
       nextSource = source;
-      rangeLength = min(currentRanges[l].source - source, length);
+      rangeLength = min(ranges[from][l].source - source, length);
     } else if (source <
-               currentRanges[l - 1].source + currentRanges[l - 1].length) {
-      nextSource = currentRanges[l - 1].destination + source -
-                   currentRanges[l - 1].source;
+               ranges[from][l - 1].source + ranges[from][l - 1].length) {
+      nextSource =
+          ranges[from][l - 1].destination + source - ranges[from][l - 1].source;
       rangeLength = min(
-          currentRanges[l - 1].length - (source - currentRanges[l - 1].source),
+          ranges[from][l - 1].length - (source - ranges[from][l - 1].source),
           length);
     } else {
       nextSource = source;
