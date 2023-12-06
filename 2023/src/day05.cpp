@@ -17,31 +17,6 @@ struct Range {
 vector<long long> seeds;
 map<tuple<string, string>, vector<Range>> ranges;
 
-long long find(string from, string to, long long idx) {
-  if (from == to) { return idx; }
-  for (auto itr = ranges.begin(); itr != ranges.end(); ++itr) {
-    if (get<0>(itr->first) == from) {
-      for (const Range& range : itr->second) {
-        if (idx >= range.source && idx < range.source + range.length) {
-          return find(get<1>(itr->first), to,
-                      range.destination + idx - range.source);
-        }
-      }
-      return find(get<1>(itr->first), to, idx);
-    }
-  }
-  return -1;
-}
-
-long long part1() {
-  long long ans = -1;
-  for (long long seed : seeds) {
-    long long location = find("seed", "location", seed);
-    if (ans == -1 || location < ans) { ans = location; }
-  }
-  return ans;
-}
-
 long long lowestValue(string from,
                       string to,
                       long long source,
@@ -90,6 +65,15 @@ long long lowestValue(string from,
       }
       break;
     }
+  }
+  return ans;
+}
+
+long long part1() {
+  long long ans = -1;
+  for (long long seed : seeds) {
+    long long location = lowestValue("seed", "location", seed, 1);
+    if (ans == -1 || location < ans) { ans = location; }
   }
   return ans;
 }
