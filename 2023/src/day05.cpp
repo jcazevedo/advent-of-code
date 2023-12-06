@@ -25,16 +25,16 @@ long long lowestValue(string from,
   if (from == to) { return source; }
   long long ans = numeric_limits<long long>::max();
   int N = ranges[from].size();
-  while (length != 0) {
-    int l = 0, r = N;
-    while (l < r) {
-      int m = l + (r - l) / 2;
-      if (source >= ranges[from][m].source) {
-        l = m + 1;
-      } else {
-        r = m;
-      }
+  int l = 0, r = N;
+  while (l < r) {
+    int m = l + (r - l) / 2;
+    if (source >= ranges[from][m].source) {
+      l = m + 1;
+    } else {
+      r = m;
     }
+  }
+  while (length != 0) {
     long long rangeLength, nextSource;
     if (l == 0 || (l < N && source >= ranges[from][l - 1].source +
                                           ranges[from][l - 1].length)) {
@@ -54,6 +54,7 @@ long long lowestValue(string from,
     ans = min(ans, lowestValue(transitions[from], to, nextSource, rangeLength));
     length -= rangeLength;
     source += rangeLength;
+    ++l;
   }
   return ans;
 }
