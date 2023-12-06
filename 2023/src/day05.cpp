@@ -28,7 +28,6 @@ long long lowestValue(string from,
       while (length != 0) {
         bool used = false;
         for (const Range& range : itr->second) {
-          if (length == 0) { break; }
           if (source >= range.source && source < range.source + range.length) {
             long long rangeLength =
                 min(range.length - (source - range.source), length);
@@ -39,7 +38,7 @@ long long lowestValue(string from,
             length -= rangeLength;
             source += rangeLength;
             used = true;
-            break;
+            if (length == 0) { break; }
           }
         }
         if (!used && length > 0) {
