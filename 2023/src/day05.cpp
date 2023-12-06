@@ -34,7 +34,7 @@ long long lowestValue(string from,
       r = m;
     }
   }
-  while (length != 0) {
+  for (; l <= N && length != 0; ++l) {
     long long rangeLength, nextSource;
     if (l == 0 || (l < N && source >= ranges[from][l - 1].source +
                                           ranges[from][l - 1].length)) {
@@ -54,7 +54,6 @@ long long lowestValue(string from,
     ans = min(ans, lowestValue(transitions[from], to, nextSource, rangeLength));
     length -= rangeLength;
     source += rangeLength;
-    ++l;
   }
   return ans;
 }
