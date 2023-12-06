@@ -4,7 +4,6 @@
 #include <limits>
 #include <map>
 #include <sstream>
-#include <tuple>
 #include <vector>
 
 using namespace std;
@@ -16,7 +15,8 @@ struct Range {
 };
 
 vector<long long> seeds;
-map<tuple<string, string>, vector<Range>> ranges;
+map<string, string> transitions;
+map<string, vector<Range>> ranges;
 
 long long lowestValue(string from,
                       string to,
@@ -24,43 +24,37 @@ long long lowestValue(string from,
                       long long length) {
   if (from == to) { return source; }
   long long ans = numeric_limits<long long>::max();
-  for (auto itr = ranges.begin(); itr != ranges.end(); ++itr) {
-    if (get<0>(itr->first) == from) {
-      vector<Range>& currentRanges = itr->second;
-      int N = currentRanges.size();
-      while (length != 0) {
-        int l = 0, r = N;
-        while (l < r) {
-          int m = l + (r - l) / 2;
-          if (source >= currentRanges[m].source) {
-            l = m + 1;
-          } else {
-            r = m;
-          }
-        }
-        long long rangeLength, nextSource;
-        if (l == 0 || (l < N && source >= currentRanges[l - 1].source +
-                                              currentRanges[l - 1].length)) {
-          nextSource = source;
-          rangeLength = min(currentRanges[l].source - source, length);
-        } else if (source <
-                   currentRanges[l - 1].source + currentRanges[l - 1].length) {
-          nextSource = currentRanges[l - 1].destination + source -
-                       currentRanges[l - 1].source;
-          rangeLength = min(currentRanges[l - 1].length -
-                                (source - currentRanges[l - 1].source),
-                            length);
-        } else {
-          nextSource = source;
-          rangeLength = length;
-        }
-        ans = min(ans,
-                  lowestValue(get<1>(itr->first), to, nextSource, rangeLength));
-        length -= rangeLength;
-        source += rangeLength;
+  vector<Range>& currentRanges = ranges[from];
+  int N = currentRanges.size();
+  while (length != 0) {
+    int l = 0, r = N;
+    while (l < r) {
+      int m = l + (r - l) / 2;
+      if (source >= currentRanges[m].source) {
+        l = m + 1;
+      } else {
+        r = m;
       }
-      break;
     }
+    long long rangeLength, nextSource;
+    if (l == 0 || (l < N && source >= currentRanges[l - 1].source +
+                                          currentRanges[l - 1].length)) {
+      nextSource = source;
+      rangeLength = min(currentRanges[l].source - source, length);
+    } else if (source <
+               currentRanges[l - 1].source + currentRanges[l - 1].length) {
+      nextSource = currentRanges[l - 1].destination + source -
+                   currentRanges[l - 1].source;
+      rangeLength = min(
+          currentRanges[l - 1].length - (source - currentRanges[l - 1].source),
+          length);
+    } else {
+      nextSource = source;
+      rangeLength = length;
+    }
+    ans = min(ans, lowestValue(transitions[from], to, nextSource, rangeLength));
+    length -= rangeLength;
+    source += rangeLength;
   }
   return ans;
 }
@@ -91,7 +85,7 @@ int main() {
   long long seed;
   while (ss >> seed) { seeds.push_back(seed); }
   getline(fin, s);
-  tuple<string, string> curr;
+  string curr;
   while (getline(fin, s)) {
     if (s.size() == 0) { continue; }
     if (isdigit(s[0])) {
@@ -103,7 +97,8 @@ int main() {
       size_t toLocation = s.find("-to-");
       string from = s.substr(0, toLocation);
       string to = s.substr(toLocation + 4, s.find(" ") - toLocation - 4);
-      curr = {from, to};
+      transitions[from] = to;
+      curr = from;
     }
   }
   fin.close();
