@@ -22,7 +22,7 @@ long long lowestValue(string from,
                       long long source,
                       long long length) {
   if (from == to) { return source; }
-  long long ans = numeric_limits<long>::max();
+  long long ans = numeric_limits<long long>::max();
   for (auto itr = ranges.begin(); itr != ranges.end(); ++itr) {
     if (get<0>(itr->first) == from) {
       while (length != 0) {
@@ -43,8 +43,8 @@ long long lowestValue(string from,
           }
         }
         if (!used && length > 0) {
-          long long minSource = numeric_limits<long>::max();
-          long long maxSource = numeric_limits<long>::min();
+          long long minSource = numeric_limits<long long>::max();
+          long long maxSource = numeric_limits<long long>::min();
           for (const Range& range : itr->second) {
             if (range.source > source) {
               minSource = min(minSource, range.source);
@@ -70,17 +70,16 @@ long long lowestValue(string from,
 }
 
 long long part1() {
-  long long ans = -1;
+  long long ans = numeric_limits<long long>::max();
   for (long long seed : seeds) {
-    long long location = lowestValue("seed", "location", seed, 1);
-    if (ans == -1 || location < ans) { ans = location; }
+    ans = min(ans, lowestValue("seed", "location", seed, 1));
   }
   return ans;
 }
 
 long long part2() {
-  long long ans = numeric_limits<long>::max();
   int N = seeds.size();
+  long long ans = numeric_limits<long long>::max();
   for (int i = 0; i < N; i += 2) {
     ans = min(ans, lowestValue("seed", "location", seeds[i], seeds[i + 1]));
   }
