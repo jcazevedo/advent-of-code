@@ -34,12 +34,13 @@ long long lowestValue(string from,
       r = m;
     }
   }
-  for (; l <= N && length != 0; ++l) {
+  while (length != 0) {
     long long rangeLength, nextSource;
     if (l == 0 || (l < N && source >= ranges[from][l - 1].source +
                                           ranges[from][l - 1].length)) {
       nextSource = source;
       rangeLength = min(ranges[from][l].source - source, length);
+      if (nextSource >= ranges[from][l].source) { ++l; }
     } else if (source <
                ranges[from][l - 1].source + ranges[from][l - 1].length) {
       nextSource =
@@ -47,6 +48,7 @@ long long lowestValue(string from,
       rangeLength = min(
           ranges[from][l - 1].length - (source - ranges[from][l - 1].source),
           length);
+      ++l;
     } else {
       nextSource = source;
       rangeLength = length;
