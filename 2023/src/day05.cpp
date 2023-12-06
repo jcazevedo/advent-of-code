@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <limits>
@@ -25,41 +26,40 @@ long long lowestValue(string from,
   long long ans = numeric_limits<long long>::max();
   for (auto itr = ranges.begin(); itr != ranges.end(); ++itr) {
     if (get<0>(itr->first) == from) {
+      vector<Range>& currentRanges = itr->second;
+      int N = currentRanges.size();
       while (length != 0) {
-        bool used = false;
-        for (const Range& range : itr->second) {
-          if (source >= range.source && source < range.source + range.length) {
-            long long rangeLength =
-                min(range.length - (source - range.source), length);
-            ans =
-                min(ans, lowestValue(get<1>(itr->first), to,
-                                     range.destination + source - range.source,
-                                     rangeLength));
-            length -= rangeLength;
-            source += rangeLength;
-            used = true;
-            if (length == 0) { break; }
+        int l = 0, r = N;
+        while (l < r) {
+          int m = l + (r - l) / 2;
+          if (source >= currentRanges[m].source) {
+            l = m + 1;
+          } else {
+            r = m;
           }
         }
-        if (!used && length > 0) {
-          long long minSource = numeric_limits<long long>::max();
-          long long maxSource = numeric_limits<long long>::min();
-          for (const Range& range : itr->second) {
-            if (range.source > source) {
-              minSource = min(minSource, range.source);
-            }
-            maxSource = max(maxSource, range.source + range.length);
-          }
-          if (source < minSource) {
-            long long rangeLength = min(minSource - source, length);
-            ans = min(ans,
-                      lowestValue(get<1>(itr->first), to, source, rangeLength));
-            source += rangeLength;
-            length -= rangeLength;
-          } else if (source >= maxSource) {
-            ans = min(ans, lowestValue(get<1>(itr->first), to, source, length));
-            length = 0;
-          }
+        if (l == 0 || (l < N && source >= currentRanges[l - 1].source +
+                                              currentRanges[l - 1].length)) {
+          long long rangeLength = min(currentRanges[l].source - source, length);
+          ans = min(ans,
+                    lowestValue(get<1>(itr->first), to, source, rangeLength));
+          source += rangeLength;
+          length -= rangeLength;
+        } else if (source <
+                   currentRanges[l - 1].source + currentRanges[l - 1].length) {
+          long long rangeLength =
+              min(currentRanges[l - 1].length -
+                      (source - currentRanges[l - 1].source),
+                  length);
+          ans = min(ans, lowestValue(get<1>(itr->first), to,
+                                     currentRanges[l - 1].destination + source -
+                                         currentRanges[l - 1].source,
+                                     rangeLength));
+          length -= rangeLength;
+          source += rangeLength;
+        } else {
+          ans = min(ans, lowestValue(get<1>(itr->first), to, source, length));
+          length = 0;
         }
       }
       break;
@@ -110,6 +110,10 @@ int main() {
     }
   }
   fin.close();
+  for (auto itr = ranges.begin(); itr != ranges.end(); ++itr) {
+    sort(itr->second.begin(), itr->second.end(),
+         [&](Range a, Range b) { return a.source < b.source; });
+  }
   cout << "Part 1: " << part1() << endl;
   cout << "Part 2: " << part2() << endl;
   return 0;
