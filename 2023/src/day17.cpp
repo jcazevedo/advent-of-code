@@ -33,12 +33,7 @@ int solve(int minConsecutive, int maxConsecutive) {
   map<tuple<int, int, tuple<int, int>, int>, int> dist;
   auto compare = [](const Node& a, const Node& b) { return a.heat > b.heat; };
   priority_queue<Node, vector<Node>, decltype(compare)> pq(compare);
-  Node start;
-  start.i = 0;
-  start.j = 0;
-  start.consecutive = 0;
-  start.heat = 0;
-  start.dir = {0, 1};
+  Node start = {0, 0, 0, 0, {0, 1}};
   pq.push(start);
   dist[{0, 0, {0, 1}, 0}] = 0;
   start.dir = {1, 0};
