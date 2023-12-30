@@ -19,7 +19,7 @@ object Day24 extends DailyChallenge[String, String] {
     final val init: ALU = ALU(Map("w" -> 0L, "x" -> 0L, "y" -> 0L, "z" -> 0L))
   }
 
-  def solve(initialInstructions: List[Instruction], inputRange: List[Int]): String = {
+  def solve(initialInstructions: List[Instruction], inputRange: LazyList[Int]): String = {
     val visited = mutable.Map.empty[Int, Set[ALU]]
 
     def aux(alu: ALU, instructions: List[Instruction], currentInput: String): Option[String] = {
@@ -38,10 +38,8 @@ object Day24 extends DailyChallenge[String, String] {
               visited(currentInput.length) = visited.getOrElse(currentInput.length, Set.empty) + alu
 
             inputRange
-              .to(LazyList)
               .map(nextInput => aux(ALU(alu.variables.updated(a, nextInput)), next, s"$currentInput$nextInput"))
-              .dropWhile(_.isEmpty)
-              .headOption
+              .find(_.nonEmpty)
               .flatten
           }
 
@@ -84,8 +82,8 @@ object Day24 extends DailyChallenge[String, String] {
       })
       .toList
 
-    val part1 = solve(instructions, (9 to 1 by -1).toList)
-    val part2 = solve(instructions, (1 to 9 by 1).toList)
+    val part1 = solve(instructions, (9 to 1 by -1).to(LazyList))
+    val part2 = solve(instructions, (1 to 9 by 1).to(LazyList))
 
     (part1, part2)
   }
