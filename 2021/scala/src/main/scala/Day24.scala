@@ -32,9 +32,7 @@ object Day24 extends DailyChallenge[String, String] {
       instructions match {
         case Inp(Var(a)) :: next =>
           if (
-            currentInput.nonEmpty && visited.exists({ case (nInstructions, visitedStates) =>
-              nInstructions == currentInput.length && visitedStates.contains(alu)
-            })
+            currentInput.nonEmpty && visited.contains(currentInput.length) && visited(currentInput.length).contains(alu)
           )
             None
           else {
@@ -48,6 +46,7 @@ object Day24 extends DailyChallenge[String, String] {
               .headOption
               .flatten
           }
+
         case Add(Var(a), term) :: next =>
           aux(ALU(alu.variables.updated(a, alu.variables(a) + valueOf(term))), next, currentInput)
 
