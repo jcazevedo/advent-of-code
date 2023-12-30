@@ -1,4 +1,9 @@
-#include <bits/stdc++.h>
+#include <fstream>
+#include <iostream>
+#include <map>
+#include <string>
+#include <tuple>
+#include <vector>
 
 using namespace std;
 
