@@ -31,9 +31,7 @@ object Day24 extends DailyChallenge[String, String] {
 
       instructions match {
         case Inp(Var(a)) :: next =>
-          if (
-            currentInput.nonEmpty && visited.contains(currentInput.length) && visited(currentInput.length).contains(alu)
-          )
+          if (currentInput.nonEmpty && visited.get(currentInput.length).exists(_.contains(alu)))
             None
           else {
             if (currentInput.nonEmpty)
