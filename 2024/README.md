@@ -8,5 +8,5 @@ the following, replacing `XX` with the day of the desired problem:
 $ sbt "runMain DayXX"
 ```
 
-[advent-of-code-2022]: https://adventofcode.com/2024
+[advent-of-code-2024]: https://adventofcode.com/2024
 [sbt]: https://www.scala-sbt.org/
