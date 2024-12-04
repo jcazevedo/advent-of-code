@@ -15,10 +15,9 @@ object Day04 extends DailyChallenge[Int, Int] {
     } yield (di, dj)
 
     def good(ij: (Int, Int), d: (Int, Int), word: String): Boolean =
-      if (word.isEmpty) true
-      else if (ij._1 < 0 || ij._1 >= Rows || ij._2 < 0 || ij._2 >= Cols) false
-      else if (grid(ij._1)(ij._2) != word.head) false
-      else good((ij._1 + d._1, ij._2 + d._2), d, word.tail)
+      word.isEmpty || (ij._1 >= 0 && ij._1 < Rows && ij._2 >= 0 && ij._2 < Cols &&
+        grid(ij._1)(ij._2) == word.head &&
+        good((ij._1 + d._1, ij._2 + d._2), d, word.tail))
 
     val part1 = Coords
       .map(ij => Diffs.count(d => good(ij, d, "XMAS")))
