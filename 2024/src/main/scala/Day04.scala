@@ -8,6 +8,11 @@ object Day04 extends DailyChallenge[Int, Int] {
       i <- 0 until Rows
       j <- 0 until Cols
     } yield (i, j)
+    val Diffs = for {
+      di <- -1 to 1
+      dj <- -1 to 1
+      if di != 0 || dj != 0
+    } yield (di, dj)
 
     def good(ij: (Int, Int), d: (Int, Int), word: String): Boolean =
       if (word.isEmpty) true
@@ -16,31 +21,22 @@ object Day04 extends DailyChallenge[Int, Int] {
       else good((ij._1 + d._1, ij._2 + d._2), d, word.tail)
 
     val part1 = Coords
-      .flatMap((i, j) =>
-        for {
-          di <- -1 to 1
-          dj <- -1 to 1
-          if di != 0 || dj != 0
-          if good((i, j), (di, dj), "XMAS")
-        } yield (di, dj)
-      )
-      .length
+      .map(ij => Diffs.count(d => good(ij, d, "XMAS")))
+      .sum
 
-    val part2 = Coords
-      .filter((i, j) =>
-        (for {
-          di1 <- -1 to 1
-          dj1 <- -1 to 1
-          if math.abs(di1) + math.abs(dj1) == 2
-          if good((i + di1, j + dj1), (-di1, -dj1), "MAS")
-          di2 <- -1 to 1
-          dj2 <- -1 to 1
-          if math.abs(di2) + math.abs(dj2) == 2
-          if (di1, dj1) != (di2, dj2)
-          if good((i + di2, j + dj2), (-di2, -dj2), "MAS")
-        } yield ((di1, dj1), (di2, dj2))).nonEmpty
-      )
-      .length
+    val part2 = {
+      val DiagDiffs = Diffs.filter({ case (di, dj) => math.abs(di) + math.abs(dj) == 2 })
+      Coords
+        .count({ case (i, j) =>
+          DiagDiffs.exists(d1 =>
+            DiagDiffs.exists(d2 =>
+              d1 != d2 &&
+                good((i + d1._1, j + d1._2), (-d1._1, -d1._2), "MAS") &&
+                good((i + d2._1, j + d2._2), (-d2._1, -d2._2), "MAS")
+            )
+          )
+        })
+    }
 
     (part1, part2)
   }
