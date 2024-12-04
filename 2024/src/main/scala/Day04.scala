@@ -25,9 +25,9 @@ object Day04 extends DailyChallenge[Int, Int] {
       .sum
 
     val part2 = {
-      val DiagDiffs = Diffs.filter({ case (di, dj) => math.abs(di) + math.abs(dj) == 2 })
+      val DiagDiffs = Diffs.filter((di, dj) => math.abs(di) + math.abs(dj) == 2)
       Coords
-        .count({ case (i, j) =>
+        .count((i, j) =>
           DiagDiffs.exists(d1 =>
             DiagDiffs.exists(d2 =>
               d1 != d2 &&
@@ -35,7 +35,7 @@ object Day04 extends DailyChallenge[Int, Int] {
                 good((i + d2._1, j + d2._2), (-d2._1, -d2._2), "MAS")
             )
           )
-        })
+        )
     }
 
     (part1, part2)
