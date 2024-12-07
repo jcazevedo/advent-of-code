@@ -23,7 +23,7 @@ object Day07 extends DailyChallenge[Long, Long] {
       .map(_.testValue)
       .sum
     val part2 = equations
-      .filter(isTrue(_, operations = List(_ + _, _ * _, (v1, v2) => (v1.toString ++ v2.toString).toLong)))
+      .filter(isTrue(_, operations = List(_ + _, _ * _, (v1, v2) => s"$v1$v2".toLong)))
       .map(_.testValue)
       .sum
 
