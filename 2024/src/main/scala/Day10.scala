@@ -22,13 +22,13 @@ object Day10 extends DailyChallenge[Int, Int] {
 
       var cnt: Int = 0
       while (!q.isEmpty) {
-        val curr = q.dequeue()
+        val (i, j) = q.dequeue()
         Diffs.foreach((di, dj) => {
-          val ni = curr._1 + di
-          val nj = curr._2 + dj
+          val ni = i + di
+          val nj = j + dj
           if (
             inside((ni, nj)) &&
-            grid(ni)(nj) == grid(curr._1)(curr._2) + 1 &&
+            grid(ni)(nj) == grid(i)(j) + 1 &&
             (!checkVisited || !visited.contains((ni, nj)))
           ) {
             visited.addOne((ni, nj))
