@@ -68,6 +68,16 @@ object Day17 extends DailyChallenge[String, Long] {
 
       var at = 0
       while (at < 8) {
+        // The input program is as follows:
+        //
+        // B = A % 8
+        // B = B xor 3
+        // C = A / (2 ^ B)
+        // B = B xor C
+        // A = A / (2 ^ 3)
+        // B = B xor 5
+        // print(B)
+        // if (A (0) != 0) repeat
         a = at + curr * 8
         b = a % 8
         b = b ^ 3
@@ -96,17 +106,6 @@ object Day17 extends DailyChallenge[String, Long] {
       .next
 
     val part1 = run(cpu).mkString(",")
-
-    // The input program is as follows:
-    //
-    // B = A % 8
-    // B = B xor 3
-    // C = A / (2 ^ B)
-    // B = B xor C
-    // A = A / (2 ^ 3)
-    // B = B xor 5
-    // print(B)
-    // if (A (0) != 0) repeat
     val part2 = find(cpu.opcodes)
 
     (part1, part2)
