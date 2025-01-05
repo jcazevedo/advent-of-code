@@ -1,0 +1,6 @@
+-Dfile.encoding=UTF8
+-Dsbt.color=always
+-Xmx4g
+-Xss2m
+-XX:ReservedCodeCacheSize=256m
+-XX:+UseG1GC
