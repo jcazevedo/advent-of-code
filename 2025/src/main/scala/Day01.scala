@@ -32,11 +32,9 @@ object Day01 extends DailyChallenge[Int, Int] {
       case Nil =>
         0
       case Instruction(Direction.Left, steps) :: t =>
-        val cnt = ((100 - dial) % 100 + steps) / 100
-        cnt + part2(t, (dial + 100 - steps % 100) % 100)
+        ((100 - dial) % 100 + steps) / 100 + part2(t, (dial + 100 - steps % 100) % 100)
       case Instruction(Direction.Right, steps) :: t =>
-        val cnt = (dial + steps) / 100
-        cnt + part2(t, (dial + steps) % 100)
+        (dial + steps) / 100 + part2(t, (dial + steps) % 100)
     }
 
   def run(input: String): (Int, Int) = {
